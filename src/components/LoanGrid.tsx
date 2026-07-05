@@ -52,7 +52,11 @@ function LoanGrid({ rows, message, error }: LoanGridProps) {
                 <td>{row.dataCompetencia}</td>
                 <td>{row.valorEmprestimo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 <td>{row.saldoDevedor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                <td>{row.parcelaConsolidada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                <td>
+                  {typeof row.parcelaConsolidada === 'number'
+                    ? row.parcelaConsolidada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    : String(row.parcelaConsolidada)}
+                </td>
                 <td>{row.parcelaTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 <td>{row.principalAmortizacao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 <td>{row.principalSaldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>

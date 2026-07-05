@@ -35,7 +35,10 @@ function normalizeRecord(item: unknown, index: number) {
     dataCompetencia: String(record.dataCompetencia ?? record.data ?? `2026-01-${String(index + 1).padStart(2, '0')}`),
     valorEmprestimo: Number(record.valorEmprestimo ?? record.valor ?? 0),
     saldoDevedor: Number(record.saldoDevedor ?? record.saldo ?? 0),
-    parcelaConsolidada: Number(record.consolidada ?? record.parcelaConsolidada ?? record.parcela ?? 0),
+    parcelaConsolidada: (() => {
+      const raw = record.consolidada ?? record.parcelaConsolidada ?? record.parcela ?? 0
+      return typeof raw === 'string' ? String(raw) : Number(raw)
+    })(),
     parcelaTotal: Number(record.total ?? record.parcelaTotal ?? 0),
     principalAmortizacao: Number(record.amortizacao ?? record.principalAmortizacao ?? 0),
     principalSaldo: Number(record.saldo ?? record.principalSaldo ?? record.principal ?? 0),

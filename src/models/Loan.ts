@@ -10,7 +10,7 @@ export interface LoanCalculationRecord {
   dataCompetencia: string
   valorEmprestimo: number
   saldoDevedor: number
-  parcelaConsolidada: number
+  parcelaConsolidada: string | number
   parcelaTotal: number
   principalAmortizacao: number
   principalSaldo: number
