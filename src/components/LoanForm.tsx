@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import type { LoanFormField, LoanFormValues } from '../models/Loan'
 import { validateLoanForm } from '../hooks/useLoanCalculator'
 
@@ -13,6 +13,31 @@ type LoanFormProps = {
 
 function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, validation }: LoanFormProps) {
   const showError = (field: LoanFormField) => Boolean(validation.errors[field]) && submitAttempted
+  const [isCurrencyFocused, setIsCurrencyFocused] = useState(false)
+
+  const formatCurrencyValue = (value: string) => {
+    if (!value) return ''
+
+    const sanitizedValue = value.replace(/[^0-9,.-]/g, '')
+    if (!sanitizedValue) return ''
+
+    const normalizedValue = sanitizedValue.replace(/\./g, '').replace(',', '.')
+    const numericValue = Number(normalizedValue)
+
+    if (!Number.isFinite(numericValue)) return ''
+
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(numericValue)
+  }
+
+  const normalizeCurrencyValue = (value: string) => {
+    const sanitizedValue = value.replace(/[^0-9,.-]/g, '')
+    if (!sanitizedValue) return ''
+
+    return sanitizedValue.replace(/\./g, '').replace(',', '.')
+  }
 
   return (
     <form className="loan-form" onSubmit={onSubmit}>
@@ -50,12 +75,16 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
         <label className="field">
           <span>Valor do empréstimo</span>
           <input
-            type="number"
-            min="0.01"
-            step="0.01"
-            value={values.valorEmprestimo}
-            onChange={(event) => onChange('valorEmprestimo', event.target.value)}
-            placeholder="0,00"
+            type="text"
+            inputMode="decimal"
+            value={isCurrencyFocused ? values.valorEmprestimo : formatCurrencyValue(values.valorEmprestimo)}
+            onFocus={() => setIsCurrencyFocused(true)}
+            onBlur={() => {
+              setIsCurrencyFocused(false)
+              onChange('valorEmprestimo', normalizeCurrencyValue(values.valorEmprestimo))
+            }}
+            onChange={(event) => onChange('valorEmprestimo', normalizeCurrencyValue(event.target.value))}
+            placeholder="R$ 0,00"
           />
           {showError('valorEmprestimo') && <small>{validation.errors.valorEmprestimo}</small>}
         </label>
