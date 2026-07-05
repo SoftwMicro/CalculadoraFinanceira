@@ -1,77 +1,107 @@
-# React + TypeScript + Vite
+# Calculadora Financeira
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação React + TypeScript + Vite para calcular e visualizar parcelas de empréstimos com base em dados informados pelo usuário.
 
-Currently, two official plugins are available:
+## Tecnologias utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Dependências principais
+- React 19
+- React DOM 19
+- Vite 8
+- TypeScript 6
+- ESLint para análise de qualidade do código
 
-## React Compiler
+### Dependências de desenvolvimento
+- @vitejs/plugin-react
+- @types/react e @types/react-dom
+- @types/node
+- typescript-eslint
+- eslint-plugin-react-hooks
+- eslint-plugin-react-refresh
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Estrutura do projeto
 
-Note: This will impact Vite dev & build performances.
+- src/App.tsx: ponto de entrada da aplicação
+- src/main.tsx: bootstrap do React
+- src/pages/LoanPage.tsx: página principal que renderiza a calculadora
+- src/components/LoanCalculator.tsx: componente principal que organiza formulário e tabela
+- src/components/LoanForm.tsx: formulário com campos de entrada e validação visual
+- src/components/LoanGrid.tsx: exibição das parcelas calculadas
+- src/hooks/useLoanCalculator.ts: estado, validação e lógica de submissão
+- src/services/api.ts: integração com a API de cálculo
+- src/models/Loan.ts: tipos e interfaces do domínio
+- src/styles/loan.css: estilos da calculadora
 
-## Expanding the ESLint configuration
+## Requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+ (recomendado)
+- npm ou yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Instalação
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Acesse a pasta do projeto:
+   ```bash
+   cd C:\Projetos\CalculadoraFinanceira
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
+## Execução local
+
+Inicie o servidor de desenvolvimento:
+
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Após isso, abra o endereço exibido no terminal, normalmente:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+http://localhost:5173
 ```
+
+## Build para produção
+
+Para gerar a versão otimizada:
+
+```bash
+npm run build
+```
+
+O build será gerado na pasta dist/.
+
+## Fluxo da aplicação
+
+1. A aplicação inicia em App.tsx e renderiza LoanPage.
+2. LoanPage carrega LoanCalculator.
+3. O usuário preenche os dados no formulário de LoanForm.
+4. A lógica de estado e validação fica em useLoanCalculator.
+5. Ao enviar o formulário, os dados são enviados para a API através de api.ts.
+6. Se a API responder com sucesso, os registros são exibidos em LoanGrid.
+7. Se houver falha de comunicação, a aplicação utiliza dados demonstrativos como fallback.
+
+## Variáveis de ambiente
+
+A integração com a API usa a variável de ambiente:
+
+```bash
+VITE_API_BASE_URL
+```
+
+Exemplo:
+
+```bash
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+Se não for definida, a aplicação tenta usar uma URL vazia e pode depender do fallback de exemplo.
+
+## Scripts disponíveis
+
+- npm run dev: inicia o ambiente de desenvolvimento
+- npm run build: gera a build de produção
+- npm run preview: visualiza a build localmente
+- npm run lint: executa a checagem de lint do projeto
