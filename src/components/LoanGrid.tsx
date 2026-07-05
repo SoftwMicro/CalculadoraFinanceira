@@ -27,16 +27,22 @@ function LoanGrid({ rows, message, error }: LoanGridProps) {
       <div className="table-wrapper">
         <table>
           <thead>
+            <tr className="group-headers">
+              <th colSpan={3}>Empréstimo</th>
+              <th colSpan={2}>Parcela</th>
+              <th colSpan={2}>Principal</th>
+              <th colSpan={3}>Juros</th>
+            </tr>
             <tr>
               <th>Data Competência</th>
-              <th>Valor de Empréstimo</th>
+              <th>Valor de empréstimo</th>
               <th>Saldo Devedor</th>
-              <th>Parcela Consolidada</th>
-              <th>Parcela Total</th>
-              <th>Principal Amortização</th>
-              <th>Principal Saldo</th>
-              <th>Juros Provisão</th>
-              <th>Juros Acumulado</th>
+              <th>Consolidada</th>
+              <th>Total</th>
+              <th>Amortização</th>
+              <th>Saldo</th>
+              <th>Provisão</th>
+              <th>Acumulado</th>
               <th>Pago</th>
             </tr>
           </thead>
