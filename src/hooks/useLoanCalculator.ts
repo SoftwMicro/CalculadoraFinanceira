@@ -14,6 +14,20 @@ function isEmpty(value: string) {
   return value.trim() === ''
 }
 
+function parseDateValue(value: string): Date | null {
+  if (isEmpty(value)) {
+    return null
+  }
+
+  const [year, month, day] = value.split('-').map((part) => Number(part))
+  if (![year, month, day].every((part) => Number.isFinite(part))) {
+    return null
+  }
+
+  const parsedDate = new Date(Date.UTC(year, month - 1, day))
+  return Number.isNaN(parsedDate.getTime()) ? null : parsedDate
+}
+
 function buildDemoRecords(values: LoanFormValues): LoanCalculationRecord[] {
   const amount = Number(values.valorEmprestimo || 10000)
   const rate = Number(values.taxaJuros || 1.5)
@@ -62,14 +76,18 @@ export function validateLoanForm(values: LoanFormValues) {
     errors.taxaJuros = 'Informe a taxa de juros.'
   }
 
-  if (values.dataInicial && values.dataFinal && values.dataFinal <= values.dataInicial) {
+  const initialDate = parseDateValue(values.dataInicial)
+  const finalDate = parseDateValue(values.dataFinal)
+  const firstPaymentDate = parseDateValue(values.primeiroPagamento)
+
+  if (initialDate && finalDate && finalDate <= initialDate) {
     errors.dataFinal = 'A data final deve ser maior que a data inicial.'
   }
 
-  if (values.dataInicial && values.primeiroPagamento) {
-    if (values.primeiroPagamento <= values.dataInicial) {
+  if (initialDate && firstPaymentDate) {
+    if (firstPaymentDate <= initialDate) {
       errors.primeiroPagamento = 'O primeiro pagamento deve ser após a data inicial.'
-    } else if (values.dataFinal && values.primeiroPagamento >= values.dataFinal) {
+    } else if (finalDate && firstPaymentDate >= finalDate) {
       errors.primeiroPagamento = 'O primeiro pagamento deve ser anterior à data final.'
     }
   }

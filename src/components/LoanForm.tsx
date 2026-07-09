@@ -12,8 +12,17 @@ type LoanFormProps = {
 }
 
 function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, validation }: LoanFormProps) {
-  const showError = (field: LoanFormField) => Boolean(validation.errors[field]) && submitAttempted
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<LoanFormField, boolean>>>({})
   const [isCurrencyFocused, setIsCurrencyFocused] = useState(false)
+
+  const showError = (field: LoanFormField) => {
+    const isTouched = Boolean(touchedFields[field])
+    return Boolean(validation.errors[field]) && (submitAttempted || isTouched)
+  }
+
+  const markFieldTouched = (field: LoanFormField) => {
+    setTouchedFields((current) => ({ ...current, [field]: true }))
+  }
 
   const formatCurrencyValue = (value: string) => {
     if (!value) return ''
@@ -47,7 +56,10 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
           <input
             type="date"
             value={values.dataInicial}
-            onChange={(event) => onChange('dataInicial', event.target.value)}
+            onChange={(event) => {
+              markFieldTouched('dataInicial')
+              onChange('dataInicial', event.target.value)
+            }}
           />
           {showError('dataInicial') && <small>{validation.errors.dataInicial}</small>}
         </label>
@@ -57,7 +69,10 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
           <input
             type="date"
             value={values.dataFinal}
-            onChange={(event) => onChange('dataFinal', event.target.value)}
+            onChange={(event) => {
+              markFieldTouched('dataFinal')
+              onChange('dataFinal', event.target.value)
+            }}
           />
           {showError('dataFinal') && <small>{validation.errors.dataFinal}</small>}
         </label>
@@ -67,7 +82,10 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
           <input
             type="date"
             value={values.primeiroPagamento}
-            onChange={(event) => onChange('primeiroPagamento', event.target.value)}
+            onChange={(event) => {
+              markFieldTouched('primeiroPagamento')
+              onChange('primeiroPagamento', event.target.value)
+            }}
           />
           {showError('primeiroPagamento') && <small>{validation.errors.primeiroPagamento}</small>}
         </label>
@@ -80,10 +98,14 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
             value={isCurrencyFocused ? values.valorEmprestimo : formatCurrencyValue(values.valorEmprestimo)}
             onFocus={() => setIsCurrencyFocused(true)}
             onBlur={() => {
+              markFieldTouched('valorEmprestimo')
               setIsCurrencyFocused(false)
               onChange('valorEmprestimo', normalizeCurrencyValue(values.valorEmprestimo))
             }}
-            onChange={(event) => onChange('valorEmprestimo', normalizeCurrencyValue(event.target.value))}
+            onChange={(event) => {
+              markFieldTouched('valorEmprestimo')
+              onChange('valorEmprestimo', normalizeCurrencyValue(event.target.value))
+            }}
             placeholder="R$ 0,00"
           />
           {showError('valorEmprestimo') && <small>{validation.errors.valorEmprestimo}</small>}
@@ -96,7 +118,10 @@ function LoanForm({ values, onChange, onSubmit, loading, submitAttempted, valida
             min="0.01"
             step="0.01"
             value={values.taxaJuros}
-            onChange={(event) => onChange('taxaJuros', event.target.value)}
+            onChange={(event) => {
+              markFieldTouched('taxaJuros')
+              onChange('taxaJuros', event.target.value)
+            }}
             placeholder="1,5"
           />
           {showError('taxaJuros') && <small>{validation.errors.taxaJuros}</small>}
